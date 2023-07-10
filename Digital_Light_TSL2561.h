@@ -107,9 +107,10 @@ class TSL2561_CalculateLux {
     uint16_t readFSpecLuminosity();
     unsigned long calculateLux(unsigned int iGain, unsigned int tInt, int iType);
     void getLux(void);
-    void init(void);
+    int init(void);
     uint8_t readRegister(int deviceAddress, int address);
     void writeRegister(int deviceAddress, int address, uint8_t val);
+	bool isReady();
   private:
     uint8_t CH0_LOW, CH0_HIGH, CH1_LOW, CH1_HIGH;
     uint16_t ch0, ch1;
@@ -121,6 +122,7 @@ class TSL2561_CalculateLux {
     unsigned int m;
     unsigned long temp;
     unsigned long lux;
+	bool ready;
 
 };
 extern TSL2561_CalculateLux  TSL2561;

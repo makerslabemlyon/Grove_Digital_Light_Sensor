@@ -61,13 +61,24 @@ void TSL2561_CalculateLux::getLux(void) {
     ch0 = (CH0_HIGH << 8) | CH0_LOW;
     ch1 = (CH1_HIGH << 8) | CH1_LOW;
 }
-void TSL2561_CalculateLux::init() {
+int TSL2561_CalculateLux::init() {
+	ready = false;
+	Wire.beginTransmission(TSL2561_Address);
+	int deviceOk =  Wire.endTransmission();
+	if (deviceOk != 0 )
+		return deviceOk;
+	
     writeRegister(TSL2561_Address, TSL2561_Control, 0x03); // POWER UP
     writeRegister(TSL2561_Address, TSL2561_Timing, 0x00); //No High Gain (1x), integration time of 13ms
     writeRegister(TSL2561_Address, TSL2561_Interrupt, 0x00);
     writeRegister(TSL2561_Address, TSL2561_Control, 0x00); // POWER Down
+	ready =  true;
+	return 0;
 }
 
+bool TSL2561_CalculateLux::isReady() {
+	return ready;
+}
 
 uint16_t TSL2561_CalculateLux::readIRLuminosity() { // read Infrared channel value only, not convert to lux.
     writeRegister(TSL2561_Address, TSL2561_Control, 0x03); // POWER UP
